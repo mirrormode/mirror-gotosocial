@@ -60,6 +60,7 @@ export default function AdminMenu() {
 			defaultChild="actions"
 			permissions={permissions}
 		>
+			<AdminConfigMenu />
 			<AdminInstanceMenu />
 			<AdminEmojisMenu />
 			<AdminRelaySubscriptionsMenu />
@@ -76,25 +77,23 @@ export default function AdminMenu() {
 	INTERNAL COMPONENTS
 */
 
+function AdminConfigMenu() {
+	return (
+		<MenuItem
+			name="System Configuration"
+			itemUrl="system-configuration"
+			icon="fa-cogs"
+		/>
+	);
+}
+
 function AdminInstanceMenu() {
 	return (
 		<MenuItem
-			name="Instance"
+			name="Instance Info & Rules"
 			itemUrl="instance"
-			defaultChild="settings"
 			icon="fa-sitemap"
-		>
-			<MenuItem
-				name="Settings"
-				itemUrl="settings"
-				icon="fa-sliders"
-			/>
-			<MenuItem
-				name="Rules"
-				itemUrl="rules"
-				icon="fa-dot-circle-o"
-			/>
-		</MenuItem>
+		/>
 	);
 }
 

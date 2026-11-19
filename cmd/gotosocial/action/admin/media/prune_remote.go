@@ -52,7 +52,8 @@ func PruneRemote(ctx context.Context) error {
 	}
 
 	// Get media remote cache duration as an "olderThan" time.
-	olderThan := config.GetMediaRemoteCacheOlderThanTime(time.Now())
+	dConf := prune.state.DB.DynamicConfig(ctx)
+	olderThan := dConf.GetMediaRemoteCacheOlderThanTime(time.Now())
 
 	// Perform the actual pruning with logging.
 	prune.cleaner.Media().LogPruneUnused(ctx)

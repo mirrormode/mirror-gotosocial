@@ -30,13 +30,10 @@ import FormWithData from "../../../lib/form/form-with-data";
 
 export default function InstanceRules() {
 	return (
-		<>
-			<h1>Instance Rules</h1>
-			<FormWithData
-				dataQuery={useInstanceRulesQuery}
-				DataForm={InstanceRulesForm}
-			/>
-		</>
+		<FormWithData
+			dataQuery={useInstanceRulesQuery}
+			DataForm={InstanceRulesForm}
+		/>
 	);
 }
 
@@ -51,11 +48,18 @@ function InstanceRulesForm({ data: rules }: { data: MappedRules }) {
 
 	return (
 		<form onSubmit={submitForm} className="new-rule">
+			<div className="form-section-docs">
+				<h3>Instance Rules</h3>
+				<p>
+					You can use this section to set rules that you expect people on your instance to abide by. Eg., "use content warnings", "no NSFW" etc.
+					<br/>Rules will be displayed to all visitors on the instance's <a href="/about#rules">about page</a>, and must be agreed to when someone signs up for an account.
+				</p>
+			</div>
 			<ol className="instance-rules">
 				{Object.values(rules).map((rule: InstanceRule) => (
 					<Link key={"link-"+rule.id} className="rule" to={`~${baseUrl}/rules/${rule.id}`}>
 						<li key={rule.id}>
-							<h2>{rule.text} <i className="fa fa-pencil edit-icon" /></h2>
+							<h4>{rule.text} <i className="fa fa-pencil edit-icon" /></h4>
 						</li>
 						<span>{new Date(rule.created_at).toLocaleString()}</span>
 					</Link>

@@ -45,6 +45,10 @@ type DB interface {
 	Relay
 	Report
 	Rule
+	// DynamicConfigDB has a function
+	// called DynamicConfig so we have
+	// to fudge the naming a bit here.
+	DynamicConfigDB
 	ScheduledStatus
 	Search
 	Session

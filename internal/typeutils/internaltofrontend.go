@@ -3541,3 +3541,13 @@ func (c *Converter) RelayActorToAPIRelayActor(
 		},
 	}, nil
 }
+
+func (c *Converter) DynamicConfigToAPIDynamicConfig(rtConf *gtsmodel.DynamicConfig) *apimodel.AdminDynamicConfig {
+	return &apimodel.AdminDynamicConfig{
+		InstanceSubscriptionsProcessCron: &rtConf.InstanceSubscriptionsProcessCron.Expr,
+		MediaCleanupCron:                 &rtConf.MediaCleanupCron.Expr,
+		MediaRemoteCacheDuration:         &apimodel.HumanReadableDuration{rtConf.MediaRemoteCacheDuration},
+		StatusesCleanupCron:              &rtConf.StatusesCleanupCron.Expr,
+		StatusesCleanupRemoteOlderThan:   &apimodel.HumanReadableDuration{rtConf.StatusesCleanupRemoteOlderThan},
+	}
+}

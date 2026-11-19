@@ -21,8 +21,6 @@ import React from "react";
 import { BaseUrlContext, useBaseUrl, useHasPermission } from "../../lib/navigation/util";
 import { Redirect, Route, Router, Switch } from "wouter";
 import { ErrorBoundary } from "../../lib/navigation/error";
-import InstanceSettings from "./instance/settings";
-import InstanceRules from "./instance/rules";
 import InstanceRuleDetail from "./instance/ruledetail";
 import Media from "./actions/media";
 import Keys from "./actions/keys";
@@ -43,14 +41,15 @@ import RelayActorsOverview from "./relay-actors";
 import RelayActorNew from "./relay-actors/new";
 import RelayActorDetail from "./relay-actors/detail";
 import RelayActorManageRelationships from "./relay-actors/relationships";
+import Instance from "./instance";
+import DynamicConfig from "./dynamicconfig";
 
 /*
 	EXPORTED COMPONENTS
 */
 
 /**
- * - /settings/admin/instance/settings
- * - /settings/admin/instance/rules
+ * - /settings/admin/instance
  * - /settings/admin/instance/rules/:ruleId
  * - /settings/admin/relay-subscriptions/overview
  * - /settings/admin/relay-subscriptions/new
@@ -84,6 +83,7 @@ export default function AdminRouter() {
 	return (
 		<BaseUrlContext.Provider value={absBase}>
 			<Router base={thisBase}>
+				<AdminDynamicConfigRouter />
 				<AdminInstanceRouter />
 				<AdminEmojisRouter />
 				<AdminRelaySubscriptionsRouter />
@@ -256,8 +256,29 @@ function AdminActionsRouter() {
 }
 
 /**
- * - /settings/admin/instance/settings
- * - /settings/admin/instance/rules
+ * - /settings/admin/system-configuration
+ */
+function AdminDynamicConfigRouter() {
+	const parentUrl = useBaseUrl();
+	const thisBase = "/system-configuration";
+	const absBase = parentUrl + thisBase;
+
+	return (
+		<BaseUrlContext.Provider value={absBase}>
+			<Router base={thisBase}>
+				<ErrorBoundary>
+					<Switch>
+						<Route path="" component={DynamicConfig}/>
+						<Route><Redirect to="" /></Route>
+					</Switch>
+				</ErrorBoundary>
+			</Router>
+		</BaseUrlContext.Provider>
+	);
+}
+
+/**
+ * - /settings/admin/instance
  * - /settings/admin/instance/rules/:ruleId
  */
 function AdminInstanceRouter() {
@@ -270,10 +291,9 @@ function AdminInstanceRouter() {
 			<Router base={thisBase}>
 				<ErrorBoundary>
 					<Switch>
-						<Route path="/settings" component={InstanceSettings}/>
-						<Route path="/rules" component={InstanceRules} />
+						<Route path="" component={Instance}/>
 						<Route path="/rules/:ruleId" component={InstanceRuleDetail} />
-						<Route><Redirect to="/settings" /></Route>
+						<Route><Redirect to="" /></Route>
 					</Switch>
 				</ErrorBoundary>
 			</Router>

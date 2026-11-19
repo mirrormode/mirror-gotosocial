@@ -28,20 +28,20 @@ import { InstanceV1 } from "../../../lib/types/instance";
 import FormWithData from "../../../lib/form/form-with-data";
 import useFormSubmit from "../../../lib/form/submit";
 
-export default function InstanceSettings() {
+export default function InstanceInfo() {
 	return (
 		<FormWithData
 			dataQuery={useInstanceV1Query}
-			DataForm={InstanceSettingsForm}
+			DataForm={InstanceInfoForm}
 		/>
 	);
 }
 
-interface InstanceSettingsFormProps{
+interface InstanceInfoFormProps{
 	data: InstanceV1;
 }
 
-function InstanceSettingsForm({ data: instance }: InstanceSettingsFormProps) {
+function InstanceInfoForm({ data: instance }: InstanceInfoFormProps) {
 	const titleLimit = 40;
 	const shortDescLimit = 500;
 	const descLimit = 5000;
@@ -87,8 +87,6 @@ function InstanceSettingsForm({ data: instance }: InstanceSettingsFormProps) {
 			onSubmit={submitForm}
 			autoComplete="none"
 		>
-			<h1>Instance Settings</h1>
-
 			<div className="form-section-docs">
 				<h3>Appearance</h3>
 				<a

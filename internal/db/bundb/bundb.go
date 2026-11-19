@@ -65,6 +65,10 @@ type DBService struct {
 	db.Relay
 	db.Report
 	db.Rule
+	// DynamicConfigDB has a function
+	// called DynamicConfig so we have
+	// to fudge the naming a bit here.
+	db.DynamicConfigDB
 	db.ScheduledStatus
 	db.Search
 	db.Session
@@ -263,6 +267,10 @@ func NewBunDBService(ctx context.Context, state *state.State) (db.DB, error) {
 			state: state,
 		},
 		Rule: &ruleDB{
+			db:    db,
+			state: state,
+		},
+		DynamicConfigDB: &dynamicConfigDB{
 			db:    db,
 			state: state,
 		},
