@@ -57,7 +57,7 @@ func (p *Processor) DynamicConfigUpdate(
 			err := dConf.InstanceSubscriptionsProcessCron.Set(*v)
 			if err != nil {
 				err := gtserror.Newf("bad value for %s: %w", col, err)
-				return nil, gtserror.NewErrorBadRequest(err)
+				return nil, gtserror.NewErrorBadRequest(err, err.Error())
 			}
 			columns = append(columns, col)
 
@@ -76,7 +76,7 @@ func (p *Processor) DynamicConfigUpdate(
 			err := dConf.MediaCleanupCron.Set(*v)
 			if err != nil {
 				err := gtserror.Newf("bad value for %s: %w", col, err)
-				return nil, gtserror.NewErrorBadRequest(err)
+				return nil, gtserror.NewErrorBadRequest(err, err.Error())
 			}
 			columns = append(columns, col)
 
@@ -106,7 +106,7 @@ func (p *Processor) DynamicConfigUpdate(
 			err := dConf.StatusesCleanupCron.Set(*v)
 			if err != nil {
 				err := gtserror.Newf("bad value for %s: %w", col, err)
-				return nil, gtserror.NewErrorBadRequest(err)
+				return nil, gtserror.NewErrorBadRequest(err, err.Error())
 			}
 			columns = append(columns, col)
 

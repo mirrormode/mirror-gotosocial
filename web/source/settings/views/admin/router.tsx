@@ -260,7 +260,7 @@ function AdminActionsRouter() {
  */
 function AdminDynamicConfigRouter() {
 	const parentUrl = useBaseUrl();
-	const thisBase = "/system-configuration";
+	const thisBase = "/server-configuration";
 	const absBase = parentUrl + thisBase;
 
 	return (

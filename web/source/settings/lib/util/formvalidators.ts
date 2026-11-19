@@ -18,8 +18,9 @@
 */
 
 import isValidDomain from "is-valid-domain";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { ValidScopes, ValidTopLevelScopes } from "../types/scopes";
+import cronstrue from "cronstrue";
 
 /**
  * Validate the "domain" field of a form.
@@ -140,3 +141,29 @@ const scopePermittedByScope = (has: string, wanted: string) => {
 			return `unrecognized scope ${has}`;
 	}
 };
+
+/**
+ * useCronValidator returns a cron validator function,
+ * as well as a human-readable string that is set when
+ * the result of the cron validation is successful.
+ */
+export function useCronValidator(): [(_cron: string) => string, string] {
+	const [hr, setHr] = useState("");
+	return [
+		useCallback((cron: string) => {
+			if (cron === "" || cron === "* * * * *") {
+				setHr("");
+				return "cannot use empty value";
+			}
+		
+			try {
+				setHr(cronstrue.toString(cron, { verbose: true }));
+			} catch (e) {
+				setHr("");
+				return e;
+			}
+		
+			return "";
+		}, []), hr
+	];
+}

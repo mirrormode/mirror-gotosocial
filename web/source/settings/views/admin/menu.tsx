@@ -80,8 +80,8 @@ export default function AdminMenu() {
 function AdminConfigMenu() {
 	return (
 		<MenuItem
-			name="System Configuration"
-			itemUrl="system-configuration"
+			name="Server Configuration"
+			itemUrl="server-configuration"
 			icon="fa-cogs"
 		/>
 	);
