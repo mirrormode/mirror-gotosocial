@@ -677,9 +677,9 @@ func (suite *StatusCreateTestSuite) TestMentionUnknownAccount() {
 
 	// Status should have a mention of
 	// the now-freshly-looked-up account.
-  //
-  // Since we don't have a url stored for the account,
-  // the account URI will be used in the mention instead.
+	//
+	// Since we don't have a url stored for the account,
+	// the account URI will be used in the mention instead.
 	suite.Equal(`{
   "account": "yeah this is my account, what about it punk",
   "application": {

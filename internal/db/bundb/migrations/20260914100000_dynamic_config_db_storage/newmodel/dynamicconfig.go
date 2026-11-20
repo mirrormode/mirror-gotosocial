@@ -96,7 +96,7 @@ type DynamicConfig struct {
 	InstanceSubscriptionsProcessCron *CronExpression `bun:",notnull,default:'0 23 * * *'"`
 
 	// Default every night at midnight.
-	MediaCleanupCron *CronExpression `bun:",notnull,default:'0 0 * * *'"`
+	MediaCleanupCron *CronExpression `bun:",notnull,default:'@daily'"`
 
 	// Duration defining how long to
 	// locally cache media from remote

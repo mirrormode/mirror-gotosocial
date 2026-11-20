@@ -184,7 +184,7 @@ EXPECT=$(cat << "EOF"
     "log-format": "json",
     "log-level": "info",
     "log-timestamp-format": "banana",
-    "media-cleanup-cron": "0 0 * * *",
+    "media-cleanup-cron": "@daily",
     "media-description-max-chars": 5000,
     "media-description-min-chars": 69,
     "media-emoji-local-max-size": "420B",

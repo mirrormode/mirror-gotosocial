@@ -94,6 +94,9 @@ definitions:
         type: object
         x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
     NodeInfoSoftware:
+        description: |-
+            NodeInfoSoftware represents the name and
+            version number of the software of this node.
         properties:
             homepage:
                 description: Homepage for the software. Omitted in version 2.0.
@@ -113,7 +116,6 @@ definitions:
                 example: 0.1.2 1234567
                 type: string
                 x-go-name: Version
-        title: NodeInfoSoftware represents the name and version number of the software of this node.
         type: object
         x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
     NodeInfoUsage:
@@ -885,6 +887,47 @@ definitions:
         type: object
         x-go-name: AdminActionResponse
         x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
+    adminDynamicConfig:
+        description: 'TODO: add more config parameters to this over time.'
+        properties:
+            instance_subscriptions_process_cron:
+                description: Default every night at 11pm.
+                type: string
+                x-go-name: InstanceSubscriptionsProcessCron
+            media_cleanup_cron:
+                description: Default every night at midnight.
+                example: '@daily'
+                type: string
+                x-go-name: MediaCleanupCron
+            media_remote_cache_duration:
+                description: |-
+                    Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
+
+                    Default 1 day.
+                example: 1 day
+                type: string
+                x-go-name: MediaRemoteCacheDuration
+                x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
+            statuses_cleanup_cron:
+                description: Default every Sunday at 1am.
+                example: 0 1 * * 0
+                type: string
+                x-go-name: StatusesCleanupCron
+            statuses_cleanup_remote_older_than:
+                description: |-
+                    Duration defining status age beyond which to clean.
+
+                    Default 0 (disabled).
+                example: "0"
+                type: string
+                x-go-name: StatusesCleanupRemoteOlderThan
+                x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
+        title: |-
+            AdminDynamicConfig models dynamic configuration
+            of the instance for use in the admin config API.
+        type: object
+        x-go-name: AdminDynamicConfig
+        x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
     adminEmoji:
         properties:
             category:
@@ -1099,47 +1142,6 @@ definitions:
         title: AdminReport models the admin view of a report.
         type: object
         x-go-name: AdminReport
-        x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
-    adminRuntimeConfig:
-        description: 'TODO: add more config parameters to this over time.'
-        properties:
-            instance_subscriptions_process_cron:
-                description: Default every night at 11pm.
-                type: string
-                x-go-name: InstanceSubscriptionsProcessCron
-            media_cleanup_cron:
-                description: Default every night at midnight.
-                example: 0 0 * * *
-                type: string
-                x-go-name: MediaCleanupCron
-            media_remote_cache_duration:
-                description: |-
-                    Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
-
-                    Default 1 day.
-                example: 1 day
-                type: string
-                x-go-name: MediaRemoteCacheDuration
-                x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
-            statuses_cleanup_cron:
-                description: Default every Sunday at 1am.
-                example: 0 1 * * 0
-                type: string
-                x-go-name: StatusesCleanupCron
-            statuses_cleanup_remote_older_than:
-                description: |-
-                    Duration defining status age beyond which to clean.
-
-                    Default 0 (disabled).
-                example: "0"
-                type: string
-                x-go-name: StatusesCleanupRemoteOlderThan
-                x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
-        title: |-
-            AdminRuntimeConfig models runtime configuration
-            of the instance for use in the admin config API.
-        type: object
-        x-go-name: AdminRuntimeConfig
         x-go-package: code.superseriousbusiness.org/gotosocial/internal/api/model
     application:
         properties:
@@ -4384,7 +4386,7 @@ info:
         admin: grants admin access to everything
         admin:read: grants admin read access to everything
         admin:read:accounts: grants admin read access to accounts
-        admin:read:config: grants admin read access to config
+        admin:read:config: grants admin read access to dynamic config
         admin:read:custom_emojis: grants admin read access to custom emojis
         admin:read:domain_allows: grants admin read access to domain allows
         admin:read:domain_blocks: grants admin read access to domain blocks
@@ -4394,7 +4396,7 @@ info:
         admin:read:reports: grants admin read access to reports
         admin:write: grants admin write access to everything
         admin:write:accounts: grants admin write access to accounts
-        admin:write:config: grants admin write access to config
+        admin:write:config: grants admin write access to dynamic config
         admin:write:custom_emojis: grants admin write access to custom emojis
         admin:write:domain_allows: grants admin write access to domain allows
         admin:write:domain_blocks: grants admin write access to domain blocks
@@ -8728,6 +8730,99 @@ paths:
             summary: View all domain permission subscriptions of the given permission type, in priority order (highest to lowest).
             tags:
                 - admin
+    /api/v1/admin/dynamic_config:
+        get:
+            operationId: adminDynamicConfigGet
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Admin dynamic config.
+                    schema:
+                        $ref: '#/definitions/adminDynamicConfig'
+                "401":
+                    description: unauthorized
+                    schema:
+                        $ref: '#/definitions/error'
+                "406":
+                    description: not acceptable
+                    schema:
+                        $ref: '#/definitions/error'
+                "500":
+                    description: internal server error
+                    schema:
+                        $ref: '#/definitions/error'
+            security:
+                - OAuth2 Bearer:
+                    - admin:read:config
+            summary: Show dynamic configuration for the instance.
+            tags:
+                - admin
+        patch:
+            operationId: adminDynamicConfigUpdate
+            parameters:
+                - description: Default every night at 11pm.
+                  in: query
+                  name: instance_subscriptions_process_cron
+                  type: string
+                  x-go-name: InstanceSubscriptionsProcessCron
+                - description: Default every night at midnight.
+                  example: '@daily'
+                  in: query
+                  name: media_cleanup_cron
+                  type: string
+                  x-go-name: MediaCleanupCron
+                - description: |-
+                    Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
+
+                    Default 1 day.
+                  example: 1 day
+                  in: query
+                  name: media_remote_cache_duration
+                  type: string
+                  x-go-name: MediaRemoteCacheDuration
+                  x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
+                - description: Default every Sunday at 1am.
+                  example: 0 1 * * 0
+                  in: query
+                  name: statuses_cleanup_cron
+                  type: string
+                  x-go-name: StatusesCleanupCron
+                - description: |-
+                    Duration defining status age beyond which to clean.
+
+                    Default 0 (disabled).
+                  example: "0"
+                  in: query
+                  name: statuses_cleanup_remote_older_than
+                  type: string
+                  x-go-name: StatusesCleanupRemoteOlderThan
+                  x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Admin dynamic config.
+                    schema:
+                        $ref: '#/definitions/adminDynamicConfig'
+                "401":
+                    description: unauthorized
+                    schema:
+                        $ref: '#/definitions/error'
+                "406":
+                    description: not acceptable
+                    schema:
+                        $ref: '#/definitions/error'
+                "500":
+                    description: internal server error
+                    schema:
+                        $ref: '#/definitions/error'
+            security:
+                - OAuth2 Bearer:
+                    - admin:write:config
+            summary: Update dynamic configuration for the instance.
+            tags:
+                - admin
     /api/v1/admin/email/test:
         post:
             consumes:
@@ -9526,7 +9621,7 @@ paths:
             parameters:
                 - description: |-
                     Duration for remote media cache.
-                    If value is not specified, the value of media_remote_cache_duration in the server runtime config will be used.
+                    If value is not specified, the value of media_remote_cache_duration in the server dynamic config will be used.
                   in: query
                   name: media_remote_cache_duration
                   type: string
@@ -11498,99 +11593,6 @@ paths:
                 - OAuth2 Bearer:
                     - admin:write:reports
             summary: Mark a report as resolved.
-            tags:
-                - admin
-    /api/v1/admin/runtime_config:
-        get:
-            operationId: adminRuntimeConfigGet
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Admin runtime config.
-                    schema:
-                        $ref: '#/definitions/adminRuntimeConfig'
-                "401":
-                    description: unauthorized
-                    schema:
-                        $ref: '#/definitions/error'
-                "406":
-                    description: not acceptable
-                    schema:
-                        $ref: '#/definitions/error'
-                "500":
-                    description: internal server error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - OAuth2 Bearer:
-                    - admin:read:config
-            summary: Show runtime configuration for the instance.
-            tags:
-                - admin
-        patch:
-            operationId: adminRuntimeConfigUpdate
-            parameters:
-                - description: Default every night at 11pm.
-                  in: query
-                  name: instance_subscriptions_process_cron
-                  type: string
-                  x-go-name: InstanceSubscriptionsProcessCron
-                - description: Default every night at midnight.
-                  example: 0 0 * * *
-                  in: query
-                  name: media_cleanup_cron
-                  type: string
-                  x-go-name: MediaCleanupCron
-                - description: |-
-                    Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
-
-                    Default 1 day.
-                  example: 1 day
-                  in: query
-                  name: media_remote_cache_duration
-                  type: string
-                  x-go-name: MediaRemoteCacheDuration
-                  x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
-                - description: Default every Sunday at 1am.
-                  example: 0 1 * * 0
-                  in: query
-                  name: statuses_cleanup_cron
-                  type: string
-                  x-go-name: StatusesCleanupCron
-                - description: |-
-                    Duration defining status age beyond which to clean.
-
-                    Default 0 (disabled).
-                  example: "0"
-                  in: query
-                  name: statuses_cleanup_remote_older_than
-                  type: string
-                  x-go-name: StatusesCleanupRemoteOlderThan
-                  x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: Admin runtime config.
-                    schema:
-                        $ref: '#/definitions/adminRuntimeConfig'
-                "401":
-                    description: unauthorized
-                    schema:
-                        $ref: '#/definitions/error'
-                "406":
-                    description: not acceptable
-                    schema:
-                        $ref: '#/definitions/error'
-                "500":
-                    description: internal server error
-                    schema:
-                        $ref: '#/definitions/error'
-            security:
-                - OAuth2 Bearer:
-                    - admin:write:config
-            summary: Update runtime configuration for the instance.
             tags:
                 - admin
     /api/v1/announcements:
@@ -19826,7 +19828,7 @@ securityDefinitions:
             admin: grants admin access to everything
             admin:read: grants admin read access to everything
             admin:read:accounts: grants admin read access to accounts
-            admin:read:config: grants admin read access to config
+            admin:read:config: grants admin read access to dynamic config
             admin:read:custom_emojis: grants admin read access to custom emojis
             admin:read:domain_allows: grants admin read access to domain allows
             admin:read:domain_blocks: grants admin read access to domain blocks
@@ -19836,7 +19838,7 @@ securityDefinitions:
             admin:read:reports: grants admin read access to reports
             admin:write: grants admin write access to everything
             admin:write:accounts: grants admin write access to accounts
-            admin:write:config: grants admin write access to config
+            admin:write:config: grants admin write access to dynamic config
             admin:write:custom_emojis: grants admin write access to custom emojis
             admin:write:domain_allows: grants admin write access to domain allows
             admin:write:domain_blocks: grants admin write access to domain blocks

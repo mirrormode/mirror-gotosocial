@@ -52,10 +52,21 @@ function DynamicConfigForm({ data: dConf }: { data: DynamicConfigT }) {
 		statuses_cleanup_remote_older_than: useTextInput("statuses_cleanup_remote_older_than", { source: dConf }),
 	};
 
-	const [submitForm, result] = useFormSubmit(form, useUpdateDynamicConfigMutation());
+	const [submitForm, result] = useFormSubmit(form, useUpdateDynamicConfigMutation(), {
+		changedOnly: true,
+		// Durations can come back slightly different
+		// from what the user input (eg., 3 week vs 3 weeks),
+		// so on mutation set form values to what was returned.
+		onFinish: ({ data }) => {
+			if (data) {
+				form.media_remote_cache_duration.setter(data.media_remote_cache_duration);
+				form.statuses_cleanup_remote_older_than.setter(data.statuses_cleanup_remote_older_than);
+			}
+		}
+	});
 
-	// Call all cron validate functions
-	// to generate nice human readable strings.
+	// On render call all cron validate functions
+	// to generate human readable strings already.
 	useEffect(() => {
 		form.instance_subscriptions_process_cron.validate();
 		form.media_cleanup_cron.validate();
@@ -68,10 +79,30 @@ function DynamicConfigForm({ data: dConf }: { data: DynamicConfigT }) {
 
 	return (
 		<form
+			className="server-configuration"
 			onSubmit={submitForm}
 			autoComplete="none"
 		>
-			<h1>Server Configuration</h1>
+			<div className="form-section-docs">
+				<h1>Server Configuration</h1>
+				<p>
+					On this page you can set various configuration options
+					related to the operation of the server: caching, scheduling, etc.
+				</p>
+				<div className="info">
+					<i className="fa fa-fw fa-info-circle" aria-hidden="true"></i>
+					<b>
+						This page is a work in progress.<br/>More options will be added here in future
+						versions of GoToSocial as dynamic config is migrated from the config.yaml file.
+					</b>
+				</div>
+			</div>
+
+			<div className="form-section-docs">
+				<p>
+					Instance: <a href="/settings/moderation/domain-permissions/subscriptions/search">domain permission subscriptions</a> processing.
+				</p>
+			</div>
 
 			<div className="cron-input">
 				<TextInput
@@ -79,7 +110,21 @@ function DynamicConfigForm({ data: dConf }: { data: DynamicConfigT }) {
 					label="Instance subscriptions processing cron"
 					className="monospace"
 				/>
-				<span>{ispcHr}</span>
+				<span className="cron-hr">{ispcHr}</span>
+			</div>
+
+			<div className="form-section-docs">
+				<p>
+					Media: caching and cleanup.
+				</p>
+				<a
+					href="https://docs.gotosocial.org/en/stable/admin/media_caching/#cleanup"
+					target="_blank"
+					className="docslink"
+					rel="noreferrer"
+				>
+					Learn more about media caching and cleanup (opens in a new tab)
+				</a>
 			</div>
 
 			<div className="cron-input">
@@ -88,7 +133,29 @@ function DynamicConfigForm({ data: dConf }: { data: DynamicConfigT }) {
 					label="Media cleanup cron"
 					className="monospace"
 				/>
-				<span>{mccHr}</span>
+				<span className="cron-hr">{mccHr}</span>
+			</div>
+
+			<div>
+				<TextInput
+					field={form.media_remote_cache_duration}
+					label="Media remote cache duration"
+				/>
+				<span>0 sec = cache forever</span>
+			</div>
+
+			<div className="form-section-docs">
+				<p>
+					Statuses: remote status caching and pruning.
+				</p>
+				<a
+					href="https://docs.gotosocial.org/en/stable/admin/post_caching/"
+					target="_blank"
+					className="docslink"
+					rel="noreferrer"
+				>
+					Learn more about status caching and pruning (opens in a new tab)
+				</a>
 			</div>
 
 			<div className="cron-input">
@@ -97,9 +164,29 @@ function DynamicConfigForm({ data: dConf }: { data: DynamicConfigT }) {
 					label="Statuses cleanup cron"
 					className="monospace"
 				/>
-				<span>{sccHr}</span>
+				<span className="cron-hr">{sccHr}</span>
 			</div>
-			<MutationButton label="Save" result={result} disabled={false} />
+
+			<div>
+				<TextInput
+					field={form.statuses_cleanup_remote_older_than}
+					label="Statuses cleanup remote older than"
+				/>
+				<span>0 sec = no cleanup</span>
+			</div>
+
+			<MutationButton
+				label="Save"
+				result={result}
+				disabled={
+					!(
+						(form.instance_subscriptions_process_cron.valid && form.instance_subscriptions_process_cron.hasChanged()) ||
+						(form.media_cleanup_cron.valid && form.media_cleanup_cron.hasChanged()) ||
+						(form.media_remote_cache_duration.valid && form.media_remote_cache_duration.hasChanged()) ||
+						(form.statuses_cleanup_cron.valid && form.statuses_cleanup_cron.hasChanged()) ||
+						(form.statuses_cleanup_remote_older_than.valid && form.statuses_cleanup_remote_older_than.hasChanged())
+					)
+				} />
 		</form>
 	);
 }

@@ -347,7 +347,7 @@ type AdminDynamicConfig struct {
 
 	// Default every night at midnight.
 	//
-	// example: 0 0 * * *
+	// example: @daily
 	MediaCleanupCron *string `json:"media_cleanup_cron" form:"media_cleanup_cron"`
 
 	// Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).

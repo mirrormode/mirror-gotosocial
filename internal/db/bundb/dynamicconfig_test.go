@@ -42,7 +42,7 @@ func (suite *DynamicConfigTestSuite) TestCreateGetUpdateDynamicConfig() {
 	// Check database defaults are set.
 	suite.EqualValues(1, rtConf.ID)
 	suite.Equal("1 day", rtConf.MediaRemoteCacheDuration.String())
-	suite.Equal("0 0 * * *", rtConf.MediaCleanupCron.Expr)
+	suite.Equal("@daily", rtConf.MediaCleanupCron.Expr)
 	suite.Equal("0 sec", rtConf.StatusesCleanupRemoteOlderThan.String())
 	suite.Equal("0 1 * * 0", rtConf.StatusesCleanupCron.Expr)
 	suite.Equal("0 23 * * *", rtConf.InstanceSubscriptionsProcessCron.Expr)
