@@ -39,13 +39,19 @@ func (suite *MediaCleanupTestSuite) TestMediaCleanup() {
 
 	// set up the request
 	recorder := httptest.NewRecorder()
-	ctx := suite.newContext(recorder, http.MethodPost, []byte("{\"media_remote_cache_duration\": 1}"), admin.MediaCleanupPath, "application/json")
+	ctx := suite.newContext(recorder, http.MethodPost, []byte("{\"media_remote_cache_duration\": \"1 day\"}"), admin.MediaCleanupPath, "application/json")
 
 	// call the handler
 	suite.adminModule.MediaCleanupPOSTHandler(ctx)
 
-	// we should have OK because our request was valid
-	suite.Equal(http.StatusOK, recorder.Code)
+	// We should have Accepted because our request was valid.
+	if code := recorder.Code; code != http.StatusAccepted {
+		b, err := io.ReadAll(recorder.Body)
+		if err != nil {
+			panic(err)
+		}
+		suite.FailNow("", "expected code %d, got %d; body: %s", http.StatusOK, code, b)
+	}
 
 	// the attachment should be updated in the database
 	if !testrig.WaitFor(func() bool {
@@ -70,8 +76,14 @@ func (suite *MediaCleanupTestSuite) TestMediaCleanupNoArg() {
 	// call the handler
 	suite.adminModule.MediaCleanupPOSTHandler(ctx)
 
-	// we should have OK because our request was valid
-	suite.Equal(http.StatusOK, recorder.Code)
+	// We should have Accepted because our request was valid.
+	if code := recorder.Code; code != http.StatusAccepted {
+		b, err := io.ReadAll(recorder.Body)
+		if err != nil {
+			panic(err)
+		}
+		suite.FailNow("", "expected code %d, got %d; body: %s", http.StatusOK, code, b)
+	}
 
 	if !testrig.WaitFor(func() bool {
 		if prunedAttachment, _ := suite.state.DB.GetAttachmentByID(suite.T().Context(), testAttachment.ID); prunedAttachment != nil {
@@ -89,13 +101,19 @@ func (suite *MediaCleanupTestSuite) TestMediaCleanupNotOldEnough() {
 
 	// set up the request
 	recorder := httptest.NewRecorder()
-	ctx := suite.newContext(recorder, http.MethodPost, []byte("{\"media_remote_cache_duration\": 10000}"), admin.MediaCleanupPath, "application/json")
+	ctx := suite.newContext(recorder, http.MethodPost, []byte("{\"media_remote_cache_duration\": \"10000 days\"}"), admin.MediaCleanupPath, "application/json")
 
 	// call the handler
 	suite.adminModule.MediaCleanupPOSTHandler(ctx)
 
-	// we should have OK because our request was valid
-	suite.Equal(http.StatusOK, recorder.Code)
+	// We should have Accepted because our request was valid.
+	if code := recorder.Code; code != http.StatusAccepted {
+		b, err := io.ReadAll(recorder.Body)
+		if err != nil {
+			panic(err)
+		}
+		suite.FailNow("", "expected code %d, got %d; body: %s", http.StatusOK, code, b)
+	}
 
 	// Wait for async task to finish
 	time.Sleep(1 * time.Second)
