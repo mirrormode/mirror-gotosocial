@@ -896,7 +896,6 @@ definitions:
                 x-go-name: InstanceSubscriptionsProcessCron
             media_cleanup_cron:
                 description: Default every night at midnight.
-                example: '@daily'
                 type: string
                 x-go-name: MediaCleanupCron
             media_remote_cache_duration:
@@ -904,13 +903,11 @@ definitions:
                     Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
 
                     Default 1 day.
-                example: 1 day
                 type: string
                 x-go-name: MediaRemoteCacheDuration
                 x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
             statuses_cleanup_cron:
                 description: Default every Sunday at 1am.
-                example: 0 1 * * 0
                 type: string
                 x-go-name: StatusesCleanupCron
             statuses_cleanup_remote_older_than:
@@ -918,7 +915,6 @@ definitions:
                     Duration defining status age beyond which to clean.
 
                     Default 0 (disabled).
-                example: "0"
                 type: string
                 x-go-name: StatusesCleanupRemoteOlderThan
                 x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
@@ -8759,16 +8755,18 @@ paths:
             tags:
                 - admin
         patch:
+            consumes:
+                - application/json
+                - application/x-www-form-urlencoded
             operationId: adminDynamicConfigUpdate
             parameters:
                 - description: Default every night at 11pm.
-                  in: query
+                  in: formData
                   name: instance_subscriptions_process_cron
                   type: string
                   x-go-name: InstanceSubscriptionsProcessCron
                 - description: Default every night at midnight.
-                  example: '@daily'
-                  in: query
+                  in: formData
                   name: media_cleanup_cron
                   type: string
                   x-go-name: MediaCleanupCron
@@ -8776,15 +8774,13 @@ paths:
                     Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
 
                     Default 1 day.
-                  example: 1 day
-                  in: query
+                  in: formData
                   name: media_remote_cache_duration
                   type: string
                   x-go-name: MediaRemoteCacheDuration
                   x-go-type: code.superseriousbusiness.org/gotosocial/internal/api/model.HumanReadableDuration
                 - description: Default every Sunday at 1am.
-                  example: 0 1 * * 0
-                  in: query
+                  in: formData
                   name: statuses_cleanup_cron
                   type: string
                   x-go-name: StatusesCleanupCron
@@ -8792,8 +8788,7 @@ paths:
                     Duration defining status age beyond which to clean.
 
                     Default 0 (disabled).
-                  example: "0"
-                  in: query
+                  in: formData
                   name: statuses_cleanup_remote_older_than
                   type: string
                   x-go-name: StatusesCleanupRemoteOlderThan

@@ -342,31 +342,35 @@ type AdminDynamicConfig struct {
 	// Default every night at 11pm.
 	//
 	// swagger:parameters
-	// example: 0 23 * * *
+	// in: formData
 	InstanceSubscriptionsProcessCron *string `json:"instance_subscriptions_process_cron" form:"instance_subscriptions_process_cron"`
 
 	// Default every night at midnight.
 	//
-	// example: @daily
+	// swagger:parameters
+	// in: formData
 	MediaCleanupCron *string `json:"media_cleanup_cron" form:"media_cleanup_cron"`
 
 	// Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
 	//
 	// Default 1 day.
 	//
-	// example: 1 day
+	// swagger:parameters
+	// in: formData
 	MediaRemoteCacheDuration *HumanReadableDuration `json:"media_remote_cache_duration" form:"media_remote_cache_duration"`
 
 	// Default every Sunday at 1am.
 	//
-	// example: 0 1 * * 0
+	// swagger:parameters
+	// in: formData
 	StatusesCleanupCron *string `json:"statuses_cleanup_cron" form:"statuses_cleanup_cron"`
 
 	// Duration defining status age beyond which to clean.
 	//
 	// Default 0 (disabled).
 	//
-	// example: 0
+	// swagger:parameters
+	// in: formData
 	StatusesCleanupRemoteOlderThan *HumanReadableDuration `json:"statuses_cleanup_remote_older_than" form:"statuses_cleanup_remote_older_than"`
 }
 

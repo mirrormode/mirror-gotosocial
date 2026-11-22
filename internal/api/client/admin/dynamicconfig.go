@@ -99,6 +99,10 @@ func (m *Module) DynamicConfigGETHandler(c *httputil.Context) {
 //	tags:
 //	- admin
 //
+//	consumes:
+//	- application/json
+//	- application/x-www-form-urlencoded
+//
 //	produces:
 //	- application/json
 //
