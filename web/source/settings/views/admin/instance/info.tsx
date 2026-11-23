@@ -125,7 +125,7 @@ function InstanceInfoForm({ data: instance }: InstanceInfoFormProps) {
 							placeholder="A cute drawing of a smiling sloth."
 							autoCapitalize="sentences"
 						/>
-					</div>s
+					</div>
 				</div>
 
 			</div>
