@@ -23,7 +23,7 @@ If a thread meets the above criteria, then the cleanup process will mark that th
 
 ## How to enable remote post pruning
 
-By default, the remote post pruning task is not enabled. To enable it, update your config to set `statuses-cleanup-remote-older-than` to a valid duration string, for example "1 year", and restart your instance. Posts last created/fetched/updated before that duration will then become [eligible for cleanup](#which-posts-will-be-pruned).
+By default, the remote post pruning task is not enabled. To enable it, use the [server configuration](../admin/settings.md#server-configuration) panel to set `statuses-cleanup-remote-older-than` to a valid duration string, for example "1 year". Posts last created/fetched/updated before that duration will then become [eligible for cleanup](#which-posts-will-be-pruned).
 
 ## When will post pruning occur
 
@@ -37,7 +37,7 @@ The scheduling of the post cleanup operation is controlled by the config variabl
     - [wikipedia page for cron expressions](https://en.wikipedia.org/wiki/Cron#Cron_expression)
     - [cron expression helper website](https://crontab.guru)
 
-If you wish to this cleanup operation to run more or less frequently, depending on your needs and resources, you can adjust the config value to your liking. For example, to run the job once per month instead of once per week, you could change `statuses-cleanup-cron` to `0 1 1 * *`, which will cause the job to run at 1am on the first day of every month.
+If you wish to this cleanup operation to run more or less frequently, depending on your needs and resources, you can use the [server configuration](../admin/settings.md#server-configuration) panel to adjust the config value to your liking. For example, to run the job once per month instead of once per week, you could change `statuses-cleanup-cron` to `0 1 1 * *`, which will cause the job to run at 1am on the first day of every month.
 
 !!! tip "First cleanup can take a long time"
     If you've enabled remote post pruning for the first time on a large database (eg., larger than a few GB), be aware that the first cleanup operation can take quite a long time, as there will be a significant number of threads that must be iterated through, depending on how you've set `statuses-cleanup-remote-older-than`.

@@ -1,6 +1,8 @@
 # Statuses
 
-Some statuses configuration can be modified on the 
+Some statuses configuration can be modified in the `config.yaml` file or using CLI arguments or environment variables. Other configuration options can be found in the [server configuration](../admin/settings.md#server-configuration) panel.
+
+In future, more (if not all) of these settings will be moved from the `config.yaml` file to the server config panel, so that configuration can be done on the fly without requiring a server restart.
 
 ## Settings
 

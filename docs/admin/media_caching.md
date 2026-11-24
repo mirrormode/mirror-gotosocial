@@ -21,7 +21,7 @@ Remote media, on the other hand, is cached only temporarily. After a certain amo
 
 Cleanup of the remote media cache occurs as a scheduled background process, and no manual intervention is required by admins. Cleanup takes somewhere between 5-30 minutes depending on the speed of the server, the speed of the configured storage, and the amount of media to work through.
 
-GoToSocial exposes two variables that let you, the admin, tune when and how this work is performed: `media-cleanup-cron` (accepts a cron expression), and `media-remote-cache-duration` (accepts a human-language duration string).
+GoToSocial exposes two variables in the [server configuration](../admin/settings.md#server-configuration) panel that let you, the admin, tune when and how this work is performed: `media-cleanup-cron` (accepts a cron expression), and `media-remote-cache-duration` (accepts a human-language duration string).
 
 !!! info "Cron expressions"
     A ["cron expression"](https://en.wikipedia.org/wiki/Cron#Cron_expression) is a string that allows a user or computer administrator to specify when a background task should be run. Cron expressions are typically used in programming and system maintenance to schedule jobs using the program ["cron"](https://en.wikipedia.org/wiki/Cron), which is a time-based job scheduler. Because of their ubiquity, however, cron expressions are also accepted by some other programs -- such as GoToSocial! -- to allow users to customize the scheduling of background tasks.
@@ -35,12 +35,12 @@ By default, these variables are set to the following values:
 
 | Variable name                 | Default      | Meaning                                        |
 |-------------------------------|--------------|------------------------------------------------|
-| `media-cleanup-cron`          | `0 0 * * *`  | Cron expression meaning every night @ midnight |
-| `media-remote-cache-duration` | `7 days`     | 7 days                                         |
+| `media-cleanup-cron`          | `@daily`     | Cron expression meaning every night @ midnight |
+| `media-remote-cache-duration` | `1 day `     | 1 day                                          |
 
-In other words, the default settings mean that every night at midnight, remote media older than seven days will be uncached and removed from storage.
+In other words, the default settings mean that every night at midnight, remote media older than 1 day will be uncached and removed from storage.
 
-You can achieve different results by tuning these variables. For example, say you wanted to prune at 4.30am instead of midnight, you could change `media-cleanup-cron` to `30 4 * * *`.
+You can achieve different results by tuning these variables. For example, say you wanted to prune at 4.30am instead of midnight, you could use the [server configuration](../admin/settings.md#server-configuration) panel to change `media-cleanup-cron` to `30 4 * * *`.
 
 If you only want to prune every two days instead of every night, you could set `media-cleanup-cron` to something like `0 0 */2 * *`
 
@@ -54,7 +54,7 @@ If you wanted to adopt an aggressive cleanup strategy to minimize storage usage,
 The above settings would mean that every 8 hours, GoToSocial would prune any media older than 1 day (24hrs). With this configuration, the longest amount of time you could possibly keep remote media in your storage would be about 32 hours.
 
 !!! tip
-    Setting `media-remote-cache-duration` to 0 or less means that remote media will never be uncached. However, cleanup jobs for orphaned local media and other consistency checks will still be run using the schedule defined by the other variables.
+    Setting `media-remote-cache-duration` to `0 sec` or less means that remote media will never be uncached. However, cleanup jobs for orphaned local media and other consistency checks will still be run using the schedule defined by the other variables.
 
 !!! tip
     You can also run cleanup manually as a one-off action through the admin panel, if you so wish ([see docs](./settings.md#media)).

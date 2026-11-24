@@ -157,11 +157,11 @@ If your instance is able to fetch and parse permissions at the subscription URI,
 
 Instance administration settings.
 
-### Instance Settings
+### Instance Info & Rules
 
 ![Screenshot of the GoToSocial admin panel, showing the fields to change an instance's settings](../public/admin-settings-instance.png)
 
-Here you can set various metadata for your instance, like the displayed name/title, thumbnail image, (short) description, and contact info.
+Here you can set various metadata for your instance, like the displayed name/title, thumbnail image, (short) description, contact info, and rules.
 
 #### Instance Appearance
 
@@ -232,6 +232,18 @@ Custom CSS allows you to further customize the way your instance looks when visi
 This custom CSS will be applied to all pages of your instance. Users themes and CSS still take precedence over this customization.
 
 See the [Custom CSS](../user_guide/custom_css.md) page for some tips on writing custom CSS for your instance.
+
+#### Instance Rules
+
+You can use this section to set rules that you expect people on your instance to abide by. Eg., "use content warnings", "no NSFW" etc. Rules will be displayed to all visitors on the instance's about page, and must be agreed to when someone signs up for an account.
+
+### Server Configuration
+
+![Screenshot of the GoToSocial admin panel, showing the server configuration page](../public/admin-settings-server-configuration.png)
+
+You can use this page to define various dynamic configuration options that do not belong in the `config.yaml` file.
+
+Unlike with values in the `config.yaml` file, changing the config variables on this page does not necessitate a server restart.
 
 ### Custom Emoji
 
