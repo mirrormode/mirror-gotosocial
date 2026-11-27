@@ -3555,8 +3555,8 @@ func (c *Converter) DynamicConfigToAPIDynamicConfig(rtConf *gtsmodel.DynamicConf
 	return &apimodel.AdminDynamicConfig{
 		InstanceSubscriptionsProcessCron: &rtConf.InstanceSubscriptionsProcessCron.Expr,
 		MediaCleanupCron:                 &rtConf.MediaCleanupCron.Expr,
-		MediaRemoteCacheDuration:         &apimodel.HumanReadableDuration{rtConf.MediaRemoteCacheDuration},
+		MediaRemoteCacheDuration:         &apimodel.SimpleDuration{rtConf.MediaRemoteCacheDuration},
 		StatusesCleanupCron:              &rtConf.StatusesCleanupCron.Expr,
-		StatusesCleanupRemoteOlderThan:   &apimodel.HumanReadableDuration{rtConf.StatusesCleanupRemoteOlderThan},
+		StatusesCleanupRemoteOlderThan:   &apimodel.SimpleDuration{rtConf.StatusesCleanupRemoteOlderThan},
 	}
 }

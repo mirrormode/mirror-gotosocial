@@ -195,7 +195,7 @@ type AdminActionResponse struct {
 type MediaCleanupRequest struct {
 	// Duration for remote media cache.
 	// If value is not specified, the value of media_remote_cache_duration in the server dynamic config will be used.
-	MediaRemoteCacheDuration HumanReadableDuration `form:"media_remote_cache_duration" json:"media_remote_cache_duration" xml:"media_remote_cache_duration"`
+	MediaRemoteCacheDuration SimpleDuration `form:"media_remote_cache_duration" json:"media_remote_cache_duration" xml:"media_remote_cache_duration"`
 }
 
 // MediaPurgeRequest models admin media purge parameters
@@ -351,13 +351,13 @@ type AdminDynamicConfig struct {
 	// in: formData
 	MediaCleanupCron *string `json:"media_cleanup_cron" form:"media_cleanup_cron"`
 
-	// Duration defining how long to locally cache media from remote instances (zero keeps indefinitely).
+	// Duration defining how long to locally cache media from remote instances (`0 sec` keeps indefinitely).
 	//
 	// Default 1 day.
 	//
 	// swagger:parameters
 	// in: formData
-	MediaRemoteCacheDuration *HumanReadableDuration `json:"media_remote_cache_duration" form:"media_remote_cache_duration"`
+	MediaRemoteCacheDuration *SimpleDuration `json:"media_remote_cache_duration" form:"media_remote_cache_duration"`
 
 	// Default every Sunday at 1am.
 	//
@@ -367,11 +367,11 @@ type AdminDynamicConfig struct {
 
 	// Duration defining status age beyond which to clean.
 	//
-	// Default 0 (disabled).
+	// Default 0 sec (disabled).
 	//
 	// swagger:parameters
 	// in: formData
-	StatusesCleanupRemoteOlderThan *HumanReadableDuration `json:"statuses_cleanup_remote_older_than" form:"statuses_cleanup_remote_older_than"`
+	StatusesCleanupRemoteOlderThan *SimpleDuration `json:"statuses_cleanup_remote_older_than" form:"statuses_cleanup_remote_older_than"`
 }
 
 // swagger:parameters adminDynamicConfigUpdate

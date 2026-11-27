@@ -24,23 +24,23 @@ import (
 	"codeberg.org/gruf/go-longdur"
 )
 
-// HumanReadableDuration wraps a longdur.Duration
+// SimpleDuration wraps a longdur.Duration
 // type to support marshalling and unmarshalling as
 // human-readable duration strings, eg., "10 days" etc.
 //
-// Important: marshalled HumanReadableDuration will
+// Important: marshalled SimpleDuration will
 // always use longdur.Duration.StringApprox() to avoid
 // cases where a caller provides a value like "1 month"
 // and the API returns "4 weeks 2 days" or similar.
-type HumanReadableDuration struct{ longdur.Duration }
+type SimpleDuration struct{ longdur.Duration }
 
 // MarshalJSON: implements json.Marshaler{}.
-func (d HumanReadableDuration) MarshalJSON() ([]byte, error) {
+func (d SimpleDuration) MarshalJSON() ([]byte, error) {
 	return []byte("\"" + d.StringApprox() + "\""), nil
 }
 
 // UnmarshalJSON: implements json.Unmarshaler{}.
-func (d *HumanReadableDuration) UnmarshalJSON(data []byte) error {
+func (d *SimpleDuration) UnmarshalJSON(data []byte) error {
 	if len(data) >= 2 && data[0] == '"' && data[len(data)-1] == '"' {
 		data = data[1 : len(data)-1]
 	}
@@ -48,23 +48,23 @@ func (d *HumanReadableDuration) UnmarshalJSON(data []byte) error {
 }
 
 // MarshalText: implements encoding.TextMarshaler{}.
-func (d HumanReadableDuration) MarshalText() ([]byte, error) {
+func (d SimpleDuration) MarshalText() ([]byte, error) {
 	return []byte(d.Duration.StringApprox()), nil
 }
 
 // UnmarshalText: implements encoding.TextUmarshaler{}.
-func (d *HumanReadableDuration) UnmarshalText(text []byte) error {
+func (d *SimpleDuration) UnmarshalText(text []byte) error {
 	return d.unmarshalb(text)
 }
 
 // UnmarshalParam: implements binding.BindUnmarshaler{}.
-func (d *HumanReadableDuration) UnmarshalParam(param string) error {
+func (d *SimpleDuration) UnmarshalParam(param string) error {
 	return d.unmarshal(param)
 }
 
 // unmarshalb converts byte slice to string
 // (with length check) and calls d.unmarshal().
-func (d *HumanReadableDuration) unmarshalb(b []byte) error {
+func (d *SimpleDuration) unmarshalb(b []byte) error {
 	if len(b) == 0 {
 		return errors.New("invalid duration")
 	} else if string(b) == "null" {
@@ -76,7 +76,7 @@ func (d *HumanReadableDuration) unmarshalb(b []byte) error {
 
 // unmarshal attempts to unmarshal
 // string as string encoded duration.
-func (d *HumanReadableDuration) unmarshal(str string) error {
+func (d *SimpleDuration) unmarshal(str string) error {
 	return d.Duration.Set(str)
 }
 
